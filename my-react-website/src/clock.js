@@ -3,48 +3,54 @@ import './clock.css'
 
 export default class clock extends Component {
 
-    state = {
-        secFormula: 0,
-        minFormula: 0,
-        hourFormula: 0
-    }
-    componentDidMount () {
-        setInterval(()=> {
-            this.setClock()
-        },1000)
-    }
+  state = {
+    secFormula: 0,
+    minFormula: 0,
+    hourFormula: 0
+  }
+  componentDidMount() {
+    setInterval(() => {
+      this.setClock()
+    }, 1000)
+  }
 
   setClock = () => {
     const time = new Date;
-    let secFormula = time.getSeconds() * 6;
-    let minFormula = time.getMinutes() * 6;
-    let hourFormula = (time.getHours() * 30) + (time.getMinutes() * 0.5);
+    const sec = time.getSeconds();
+    const mins = time.getMinutes();
+    const hrs = (time.getHours() + 24) % 12 || 12;
 
-    this.setState({secFormula: secFormula})
-    this.setState({minFormula: minFormula})
-    this.setState({hourFormula: hourFormula})
-   }
+    let secFormula = sec * 6;
+    let minFormula = (mins * 6) + sec * 0.1;
+    let hourFormula = hrs * 30 + (mins * 0.5) + (sec * (0.5 / 60));
 
-    render() {    
-           const { secFormula, minFormula, hourFormula} = this.state
+    this.setState({
+      secFormula,
+      minFormula,
+      hourFormula
+    })
+  }
+
+  render() {
+    const { secFormula, minFormula, hourFormula } = this.state
     return (
-        <div className='outer'>
+      <div className='outer'>
         <div className='clock'>
-        <div className='hand-hours'   style={{transform: `rotateZ(${hourFormula}deg)`}}>
+          <div className='hand-hours' style={{ transform: `rotateZ(${hourFormula}deg)` }}>
             <div className='hours'></div>
           </div>
-          
-          <div className='hand-minute'  style={{transform: `rotateZ(${minFormula}deg)`}}>
+
+          <div className='hand-minute' style={{ transform: `rotateZ(${minFormula}deg)` }}>
             <div className='minute'></div>
           </div>
-     
-          <div className='hand-second'   style={{transform: `rotateZ(${secFormula}deg)`}}>
-            <div className='second'></div> 
+
+          <div className='hand-second' style={{ transform: `rotateZ(${secFormula}deg)` }}>
+            <div className='second'></div>
           </div>
-          
+
         </div>
-        
-        </div>
+
+      </div>
     )
   }
 }
